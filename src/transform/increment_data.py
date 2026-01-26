@@ -1,10 +1,18 @@
 import pandas as pd
 from pathlib import Path
 import numpy as np
+import sys
+import logging
 
-RAW_PATH = Path("data/games_2024_raw.csv")
-PROCESSED_PATH = Path("data/games_2024_processed.csv")
-ML_PATH = Path("data/games_to_ml.csv")
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from config import config
+
+# Configurar logging
+logger = logging.getLogger(__name__)
+
+RAW_PATH = Path(config.get("paths.data.raw"))
+PROCESSED_PATH = Path(config.get("paths.data.processed"))
+ML_PATH = Path(config.get("paths.data.ml"))
 
 
 def clean_games():
@@ -15,14 +23,14 @@ def clean_games():
     PROCESSED_PATH.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(PROCESSED_PATH, index=False)
 
-    print(f"Saved processed data to {PROCESSED_PATH}")
+    logger.info(f"Saved processed data to {PROCESSED_PATH}")
 
 def data_to_ml():
     df = pd.read_csv(RAW_PATH)
-    df["home_team"] = np.where(df["matchup"].str.contains("@"), df["team_abbreviation"], np.nan)
-    df["visitor_team"] = np.where(df["matchup"].str.contains("vs"), df["team_abbreviation"], np.nan)
-    df["home_pts"] = np.where(df["matchup"].str.contains("@"), df["pts"], np.nan)
-    df["visitor_pts"] = np.where(df["matchup"].str.contains("vs"), df["pts"], np.nan)
+    df["visitor_team"] = np.where(df["matchup"].str.contains("@"), df["team_abbreviation"], np.nan)
+    df["home_team"] = np.where(df["matchup"].str.contains("vs"), df["team_abbreviation"], np.nan)
+    df["visitor_pts"] = np.where(df["matchup"].str.contains("@"), df["pts"], np.nan)
+    df["home_pts"] = np.where(df["matchup"].str.contains("vs"), df["pts"], np.nan)
     df = df.groupby(["game_id","game_date"]).agg({
         "home_team":"first",
         "visitor_team":"first",
@@ -35,7 +43,7 @@ def data_to_ml():
 
     df.to_csv(ML_PATH, index=False)
 
-    print(f"Saved processed ML data to {ML_PATH}")
+    logger.info(f"Saved processed ML data to {ML_PATH}")
 
 if __name__ == "__main__":
     clean_games()

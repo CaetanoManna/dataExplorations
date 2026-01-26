@@ -1,0 +1,25 @@
+# Configuração centralizada do projeto dataExplorations
+
+paths:
+  data:
+    raw: data/games_2024_raw.csv
+    processed: data/games_2024_processed.csv
+    ml: data/games_to_ml.csv
+
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+nba_api:
+  season: "2023-24"
+  league_id: "00"
+  season_type: "Regular Season"
+
+model:
+  split_date: "2024-02-01"
+  max_iterations: 1000
+  random_state: 42
+
+feature_engineering:
+  window_size: 5  # rolling average dos últimos N jogos
+  min_games_required: 1  # mínimo de jogos antes de calcular stats

@@ -1,4 +1,13 @@
 import pandas as pd
+import sys
+import logging
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from config import config
+
+# Configurar logging
+logger = logging.getLogger(__name__)
 
 def build_features(df):
     df = df.sort_values("game_date").copy()
