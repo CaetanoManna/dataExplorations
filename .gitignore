@@ -52,6 +52,7 @@ ehthumbs.db
 Thumbs.db
 
 # Dados locais
+**data**
 data/games_2024_raw.csv
 data/games_2024_processed.csv
 data/games_to_ml.csv

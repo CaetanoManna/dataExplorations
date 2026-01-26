@@ -1,6 +1,7 @@
 import pandas as pd
 from pathlib import Path
 from nba_api.stats.endpoints import leaguegamefinder
+from nba_api.stats.endpoints import LeagueGameLog
 import time
 import sys
 import logging
@@ -12,6 +13,7 @@ from config import config
 logger = logging.getLogger(__name__)
 
 OUTPUT_PATH = Path(config.get("paths.data.raw"))
+OUTPUT_PATH_PLAYERS = Path(config.get("paths.players.raw"))
 
 #function to capture nba games of the 2023-24 season
 def fetch_games_2024():
@@ -36,7 +38,26 @@ def fetch_games_2024():
 
     logger.info(f"Saved raw data to {OUTPUT_PATH}")
 
+def capture_players():
+    from nba_api.stats.endpoints import LeagueGameLog
+
+    gamelog = LeagueGameLog(
+        season="2023-24",
+        season_type_all_star="Regular Season",
+        player_or_team_abbreviation="P"
+    )
+
+    df = gamelog.get_data_frames()[0]
+
+    df.columns = df.columns.str.lower()
+
+    OUTPUT_PATH_PLAYERS.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUTPUT_PATH_PLAYERS, index=False)
+
+    logger.info(f"Saved raw players to {OUTPUT_PATH_PLAYERS}")
 
 if __name__ == "__main__":
     fetch_games_2024()
+    time.sleep(2)
+    capture_players()
     time.sleep(2)

@@ -1,6 +1,11 @@
 # Configuração centralizada do projeto dataExplorations
 
 paths:
+  players:
+    raw: data/players_2024_raw.csv
+    processed: data/players_2024_processed.csv
+    ml: data/players_to_ml.csv
+
   data:
     raw: data/games_2024_raw.csv
     processed: data/games_2024_processed.csv
