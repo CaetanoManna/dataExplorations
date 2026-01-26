@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score
-from ml.build_features import build_features
+from build_features import build_features
 
 df = pd.read_csv("data/games_to_ml.csv", parse_dates=["game_date"])
 

@@ -19,8 +19,17 @@ def clean_games():
 
 def data_to_ml():
     df = pd.read_csv(RAW_PATH)
-
-    df = df[["team_abbreviation","game_date", "home_team", "visitor_team", "home_pts", "visitor_pts"]]
+    df["home_team"] = np.where(df["matchup"].str.contains("@"), df["team_abbreviation"], np.nan)
+    df["visitor_team"] = np.where(df["matchup"].str.contains("vs"), df["team_abbreviation"], np.nan)
+    df["home_pts"] = np.where(df["matchup"].str.contains("@"), df["pts"], np.nan)
+    df["visitor_pts"] = np.where(df["matchup"].str.contains("vs"), df["pts"], np.nan)
+    df = df.groupby(["game_id","game_date"]).agg({
+        "home_team":"first",
+        "visitor_team":"first",
+        "home_pts":"first",
+        "visitor_pts":"first"
+    }).reset_index()
+    df = df[["game_date", "home_team", "visitor_team", "home_pts", "visitor_pts"]]
     
     ML_PATH.parent.mkdir(parents=True, exist_ok=True)
 
