@@ -131,7 +131,7 @@ Atualmente os paths estão hardcoded. Para customizar:
 
 ## 👤 Autor
 
-Rafael | Jan 2026
+Caetano Manna | Jan 2026
 
 ## 📄 Licença
 
