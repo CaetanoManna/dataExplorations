@@ -35,7 +35,7 @@ def fetch_games_2024():
         games.columns = games.columns.str.lower()
     
         OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-        games.to_csv(OUTPUT_PATH, index=False, mode='a')
+        games.to_csv(OUTPUT_PATH, index=False, mode='a', header=not OUTPUT_PATH.exists())
 
     logger.info(f"Saved raw data to {OUTPUT_PATH}")
 
@@ -55,7 +55,7 @@ def capture_players():
         df.columns = df.columns.str.lower()
 
         OUTPUT_PATH_PLAYERS.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(OUTPUT_PATH_PLAYERS, index=False, mode='a')
+        df.to_csv(OUTPUT_PATH_PLAYERS, index=False, mode='a', header=not OUTPUT_PATH_PLAYERS.exists())
 
     logger.info(f"Saved raw players to {OUTPUT_PATH_PLAYERS}")
 

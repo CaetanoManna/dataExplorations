@@ -40,10 +40,11 @@ def run_pipeline():
     try:
         # Step 2: Transform and clean data
         logger.info("\n[STEP 2/5] Executando transformação de dados (increment_data.py)...")
-        from src.transform.increment_data import clean_games, data_to_ml, clean_player_stats
+        from src.transform.increment_data import clean_games, data_to_ml, clean_player_stats, data_to_ml_players
         clean_games()
         data_to_ml()
         clean_player_stats()
+        data_to_ml_players()
         logger.info("✓ Transformação concluída com sucesso")
         
     except Exception as e:
