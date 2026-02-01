@@ -56,8 +56,3 @@ def capture_players():
 
     logger.info(f"Saved raw players to {OUTPUT_PATH_PLAYERS}")
 
-if __name__ == "__main__":
-    fetch_games_2024()
-    time.sleep(2)
-    capture_players()
-    time.sleep(2)

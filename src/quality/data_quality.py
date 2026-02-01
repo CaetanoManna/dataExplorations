@@ -17,8 +17,8 @@ def valid_schema_ml():
         "game_date": Column(pa.DateTime),
         "home_team": Column(str),
         "visitor_team": Column(str),
-        "home_pts": Column(int, Check.ge(0)),
-        "visitor_pts": Column(int, Check.ge(0))
+        "home_pts": Column(float, Check.ge(0)),
+        "visitor_pts": Column(float, Check.ge(0))
     })
     return schema
 
