@@ -2,13 +2,13 @@
 
 paths:
   players:
-    raw: data/players_2024_raw.csv
-    processed: data/players_2024_processed.csv
+    raw: data/players_2019-24_raw.csv
+    processed: data/players_2019-24_processed.csv
     ml: data/players_to_ml.csv
 
   data:
-    raw: data/games_2024_raw.csv
-    processed: data/games_2024_processed.csv
+    raw: data/games_2019-24_raw.csv
+    processed: data/games_2019-24_processed.csv
     ml: data/games_to_ml.csv
 
 logging:
@@ -16,7 +16,7 @@ logging:
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 nba_api:
-  season: "2023-24"
+  season: ["2019-20", "2020-21", "2021-22", "2022-23", "2023-24"]
   league_id: "00"
   season_type: "Regular Season"
 
