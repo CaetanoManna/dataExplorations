@@ -1,138 +1,123 @@
+
+```markdown
 # 🏀 dataExplorations - NBA Games ML Pipeline
 
-Um projeto de **Data Engineering** que constrói um pipeline completo de extração, transformação e aprendizado de máquina para prever resultados de jogos da NBA.
+Um projeto para extrair, transformar e modelar dados da NBA (2019-24) com um pipeline completo,
+integração Docker.
 
-## 📋 Objetivo
+**Principais mudanças recentes**
+- Orquestração do pipeline via `main.py` (executa toda a sequência automaticamente).
+- Dockerfile + `docker-compose.yaml` para build e execução em container.
+- `config.yaml` centralizado para parâmetros e paths.
 
-Explorar dados de jogos da NBA (temporada 2023-24) e construir modelos preditivos para:
-- Analisar padrões de desempenho das equipes
-- Prever vencedores baseado em histórico de pontuação e taxa de vitória
-- Validar estratégias de modelagem temporal
-
-## 🏗️ Estrutura do Projeto
+## 🏗️ Estrutura do Projeto (atualizada)
 
 ```
 dataExplorations/
 ├── data/                          # Dados brutos e processados
-│   ├── games_2024_raw.csv        # Dados extraídos da API (bruto)
-│   ├── games_2024_processed.csv  # Dados limpos e filtrados
-│   └── games_to_ml.csv           # Dataset preparado para ML
 ├── src/
-│   ├── extract/                  # Extração de dados
-│   │   └── capture_games.py      # API da NBA
-│   ├── transform/                # Transformações e limpeza
-│   │   └── increment_data.py     # Pipeline de processamento
-│   ├── quality/                  # Validação de dados
-│   │   └── data_quality.py       # Assertions de qualidade
-│   └── ml/                       # Machine Learning
-│       ├── build_features.py     # Feature engineering
-│       ├── train_baseline.py     # Treinamento do modelo
-│       └── metrics.py            # Avaliação
-├── notebooks/                     # Análises exploratórias (Jupyter)
-├── requirements.txt               # Dependências Python
-└── README.md                      # Este arquivo
+│   ├── extract/                  # Extração de dados (capture_games.py)
+│   ├── transform/                # Limpeza e transformações (increment_data.py)
+│   ├── quality/                  # Validação (data_quality.py)
+│   └── ml/                       # ML, features,treino
+│       ├── build_features.py
+│       ├── train_baseline.py
+├── notebooks/                     # Notebooks interativos
+├── main.py                        # Orquestrador do pipeline
+├── Dockerfile
+├── docker-compose.yaml
+├── requirements.txt
+└── README.md
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (atualizado)
 
 ### Requisitos
-- Python 3.10+
-- pip
+- Python 3.10+ (recomendado 3.12)
+- Docker (opcional, recomendado para produção)
 
-### 1. Instalação
+### Instalação local
 
-```bash
-# Clonar/navegar para o projeto
+```powershell
+# Entre na pasta do projeto
 cd dataExplorations
 
-# Criar ambiente virtual
+# Crie e ative venv (Windows)
 python -m venv venv-proj
-
-# Ativar ambiente
-# Windows:
 venv-proj\Scripts\activate
-# Linux/Mac:
-source venv-proj/bin/activate
 
-# Instalar dependências
+# Instale dependências
 pip install -r requirements.txt
 ```
 
-### 2. Executar Pipeline Completo
+### Executar pipeline completo (local)
 
-```bash
-# 1️⃣ Extrair dados da NBA API
-python src/extract/capture_games.py
-
-# 2️⃣ Transformar e limpar dados
-python src/transform/increment_data.py
-
-# 3️⃣ Treinar modelo
-python src/ml/train_baseline.py
+```powershell
+# Orquestrador executa: extract -> transform -> quality -> features -> train -> forecast
+python main.py
 ```
 
-## 📊 Pipeline de Dados
 
-```
-NBA API
-   ↓
-[capture_games.py] → games_2024_raw.csv
-   ↓
-[increment_data.py] → games_2024_processed.csv
-                   → games_to_ml.csv
-   ↓
-[build_features.py] → Features engineering
-   ↓
-[train_baseline.py] → Modelo Logistic Regression
-   ↓
-Predições + Métricas (Accuracy, ROC AUC)
+
+### Executar com Docker (recomendado)
+
+```powershell
+# Build + up
+docker-compose up --build
+
+# Ver logs
+docker-compose logs -f data-pipeline
+
+# Parar
+docker-compose down
 ```
 
-## 🔧 Tecnologias
+## 📚 Principais componentes e onde olhar
 
-| Componente | Tecnologia |
-|-----------|-----------|
-| Extração | `nba_api` |
-| Processamento | `pandas`, `numpy` |
-| ML | `scikit-learn` |
-| Visualização | `matplotlib`, `seaborn` |
+- **Orquestração:** `main.py` — executa todas as etapas em sequência e trata erros.
+- **Extração:** `src/extract/capture_games.py` — captura dados da NBA API.
+- **Transformação:** `src/transform/increment_data.py` — limpa e gera `players_2024_processed.csv` e `games_to_ml.csv`.
+- **Validação:** `src/quality/data_quality.py` — schemas e checks com `pandera` / `great_expectations`.
+- **Features:** `src/ml/build_features.py` — engenharia de features para ML.
+- **Treino baseline:** `src/ml/train_baseline.py` — modelo de baseline (LogisticRegression).
 
-## 📈 Features Atuais
 
-- `pts_avg_diff`: Diferença média de pontos marcados (home vs visitor)
-- `winrate_diff`: Diferença de taxa de vitória
+## 🐳 Docker
 
-## 🎯 Resultados Esperados
-
-Após executar o pipeline:
-- **Accuracy**: ~55-65% (baseline)
-- **ROC AUC**: ~0.55-0.65
-
-## 🔮 Próximas Melhorias
-
-- [ ] Expandir features (últimas 5 games, lesões, descanso)
-- [ ] Adicionar validação cruzada
-- [ ] Hyperparameter tuning
-- [ ] Persistência de modelos
-- [ ] Dashboard com resultados
-- [ ] Notebooks exploratórios completos
+- O `Dockerfile` instala dependências e executa `main.py` por padrão.
+- `docker-compose.yaml` monta `./data` e `./notebooks` como volumes para persistência.
 
 ## ⚙️ Configuração
 
-Atualmente os paths estão hardcoded. Para customizar:
-- Edite os `PATH` em cada script
-- *Futuro*: Criar `config.yaml` centralizado
+- Parâmetros centrais em `config.yaml` (paths, modelo, forecast horizon, métodos habilitados).
+- Para gravação incremental em CSV use `mode='a'`(ver função de escrita em `src/transform/increment_data.py`).
 
-## 📝 Notas
+## 🧪 Testes e exemplos
 
-- Validação temporal: dados anteriores a 2024-02-01 para treino, posteriores para teste
-- Sem data leakage: features usam apenas histórico anterior à data do jogo
-- Assertions de qualidade em `data_quality.py`
+- `examples.py` contém exemplos práticos para rodar forecasts em um jogador, múltiplas métricas e batch.
+- `notebooks/player_forecast_5years.ipynb` tem tutorial interativo.
+
+## ✅ Observações finais
+
+
+- Caso você tenha revertido arquivos localmente, garanta que `main.py` esteja presente e atualizado antes de rodar.
+
+## 🔧 Comandos úteis
+
+```powershell
+# Rodar pipeline
+python main.py
+
+
+# Docker
+docker-compose up --build
+```
 
 ## 👤 Autor
 
-Caetano Manna | Jan 2026
+Caetano Manna | Feb 2026
 
-## 📄 Licença
+---
 
 MIT
+```
