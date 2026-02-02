@@ -28,8 +28,8 @@ def run_pipeline():
     try:
         # Step 1: Extract data from NBA API
         logger.info("\n[STEP 1/5] Executando extração de dados (capture_games.py)...")
-        from src.extract.capture_games import fetch_games_2024, capture_players
-        fetch_games_2024()
+        from src.extract.capture_games import fetch_games, capture_players
+        fetch_games()
         capture_players()
         logger.info("✓ Extração concluída com sucesso")
         

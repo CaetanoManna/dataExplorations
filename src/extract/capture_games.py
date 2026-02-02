@@ -16,8 +16,8 @@ OUTPUT_PATH = Path(config.get("paths.data.raw"))
 OUTPUT_PATH_PLAYERS = Path(config.get("paths.players.raw"))
 
 #function to capture nba games of the 2023-24 season
-def fetch_games_2024():
-    logger.info("Fetching NBA 2024 games from NBA Stats API...")
+def fetch_games():
+    logger.info("Fetching NBA games from NBA Stats API...")
 
     season = config.get("nba_api.season")
     league_id = config.get("nba_api.league_id")

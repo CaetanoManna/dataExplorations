@@ -115,32 +115,11 @@ def data_to_ml_players():
         "blk":"mean"
     }).reset_index()
     
-    # Indicador de melhor e pior desempenho contra cada time
-    df["best_vs"] = df.groupby("player_name")["pts"].transform(max) == df["pts"]
-    df["worst_vs"] = df.groupby("player_name")["pts"].transform(min) == df["pts"]
-    
-    # Capturar opponent_team com maior e menor pts_avg por jogador
-    best_matchup = df[df["best_vs"]].groupby("player_name").apply(
-        lambda x: x.loc[x["pts"].idxmax(), "opponent_team"]
-    ).rename("best_opponent")
-    
-    worst_matchup = df[df["worst_vs"]].groupby("player_name").apply(
-        lambda x: x.loc[x["pts"].idxmin(), "opponent_team"]
-    ).rename("worst_opponent")
-    
-    # Mesclar informações de melhor e pior matchup
-    summary = pd.concat([best_matchup, worst_matchup], axis=1).reset_index()
-    
-    logger.info(f"Best matchups:\n{summary[['player_name', 'best_opponent']].head(10)}")
-    logger.info(f"Worst matchups:\n{summary[['player_name', 'worst_opponent']].head(10)}")
-
+    df["best_vs"] = df.groupby("player_name")["pts"].rank(ascending=False, method="first")
+    df["worst_vs"] = df.groupby("player_name")["pts"].rank(ascending=True, method="first")
     ML_PATH_PLAYERS.parent.mkdir(parents=True, exist_ok=True)
 
     df.to_csv(ML_PATH_PLAYERS, index=False)
     
-    # Salvar summary de melhor/pior matchups
-    summary_path = ML_PATH_PLAYERS.parent / "player_matchups_summary.csv"
-    summary.to_csv(summary_path, index=False)
     
     logger.info(f"Saved processed ML player data to {ML_PATH_PLAYERS}")
-    logger.info(f"Saved matchup summary to {summary_path}")
